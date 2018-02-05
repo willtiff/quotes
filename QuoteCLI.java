@@ -35,6 +35,7 @@ public class QuoteCLI
    // Stores all the quotes from the xml file
    private static QuoteList quoteList;
 
+// Main entry point
 public static void main(String[] args)
 {
 	QuoteSaxParser qParser = new QuoteSaxParser (quoteFileName);
@@ -44,11 +45,13 @@ public static void main(String[] args)
 	int searchScopeInt = QuoteList.SearchBothVal; // Default
 	String searchText = "";
 	String buffer = "";
+	// Initial output
 	System.out.println("The GMU Quote Generator");
 	Quote quoteTmp = quoteList.getRandomQuote();
 	printQuote(quoteTmp);
 	int selection = 0;
 	boolean flag = true;
+	// Main loop
 	while(flag){
 		printMenu();
 		buffer = in.nextLine();
@@ -67,7 +70,7 @@ public static void main(String[] args)
 				break;
 			case 2:
 				System.out.print("Select scope of search:\n1: quote\n"
-						+ "2: author\n3: both\n>");
+						+ "2: author\n3: both\n> ");
 				buffer = in.nextLine();
 				try{
 					selection = Integer.parseInt(buffer);
@@ -86,7 +89,7 @@ public static void main(String[] args)
 					default:
 						searchScopeInt = QuoteList.SearchBothVal;
 				}
-				System.out.println("Enter search query: ");
+				System.out.print("Enter search query: ");
 				searchText = in.nextLine();
 				searchList.add(searchText);
 				// limit search history size
@@ -119,7 +122,7 @@ private static void printQuote(Quote quote)
 private static void printMenu()
 {
 	System.out.print("1: Get another random quote\n2: Search\n"
-			+"3: See search history\n4: Quit\n>");
+			+"3: See search history\n4: Quit\n> ");
 }
 
 // Print all searches in searchList (should be <= 5 total)
