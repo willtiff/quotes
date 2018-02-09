@@ -3,6 +3,7 @@ package quotes;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import javax.xml.stream.XMLStreamException;
 
 
 /**
@@ -50,7 +51,7 @@ public static void main(String[] args)
 	Quote quoteTmp = quoteList.getRandomQuote();
 	printQuote(quoteTmp);
 	int selection = 0;
-	boolean flag = true;
+	boolean flag = true, modified = false;
 	// Main loop
 	while(flag){
 		printMenu();
@@ -102,6 +103,27 @@ public static void main(String[] args)
 				printSearchHistory(searchList);
 				break;
 			case 4:
+				// add new quote
+				System.out.print("Quotation: ");
+				buffer = in.nextLine();
+				if(!valid(buffer)){
+					System.out.println("Invalid quotation");
+					break;
+				}
+				quoteTmp = new Quote();
+				quoteTmp.setQuoteText(buffer);
+				System.out.print("Author: ");
+				buffer = in.nextLine();
+				if(!valid(buffer)){
+					System.out.println("Invalid author");
+					quoteTmp = null;
+					break;
+				}
+				quoteTmp.setAuthor(buffer);
+				quoteList.setQuote(quoteTmp);
+				modified = true;
+				break;
+			case 5:
 				System.out.println("Exiting");
 				flag = false;
 				break;
@@ -109,20 +131,22 @@ public static void main(String[] args)
 				System.out.println("Please enter a number from 1-4");
 		}
 	}
-	
+	if(modified)
+		writeQuoteFile();
 }
 
 // Prints a single quote
 private static void printQuote(Quote quote)
 {
-	System.out.println('"' + quote.getQuoteText() + "\n  --" + quote.getAuthor());
+	System.out.println('"' + quote.getQuoteText() + '"' + "\n  --" + quote.getAuthor());
 }
 
 // Prints a simple menu for the user to select from
 private static void printMenu()
 {
 	System.out.print("1: Get another random quote\n2: Search\n"
-			+"3: See search history\n4: Quit\n> ");
+			+"3: See search history\n4: Add new quote\n"
+			+"5: Quit\n> ");
 }
 
 // Print all searches in searchList (should be <= 5 total)
@@ -157,6 +181,26 @@ private static void searchQuote(String query, int scope)
 				printQuote(quoteTmp);
 			}
 		}
+	}
+}
+
+// validate quotation
+private static boolean valid(String quotation)
+{
+	return true;
+}
+
+// write quoteLlst out to XML file
+private static void writeQuoteFile()
+{
+	QuoteXMLWriter writer = new QuoteXMLWriter(quoteFileName);
+	try{
+		writer.writeFile(quoteList);
+		writer.closeFile();
+	}catch(XMLStreamException e){
+		System.out.println("Error writing XML file");
+	}catch(IOException e){
+		System.out.println("Error writing XML file");
 	}
 }
 } // end QuoteCLI class
