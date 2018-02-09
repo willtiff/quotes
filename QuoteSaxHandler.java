@@ -84,11 +84,21 @@ public void characters (char ch[], int start, int length)
    {
       if (currentElement.equalsIgnoreCase (QuoteTextElem))
       {
-         quoteTmp.setQuoteText (value);
+         String temp = quoteTmp.getQuoteText();
+         if(temp == null){
+            quoteTmp.setQuoteText (value);
+         }else{
+            quoteTmp.setQuoteText(temp + value);
+         }
       }
       else if (currentElement.equalsIgnoreCase (QuoteAuthorElem))
       {
-         quoteTmp.setAuthor (value);
+         String temp = quoteTmp.getAuthor();
+         if(temp == null){
+            quoteTmp.setAuthor (value);
+         }else{
+            quoteTmp.setAuthor(temp + value);
+         }
       }
    }
 }
