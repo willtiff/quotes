@@ -107,7 +107,7 @@ public static void main(String[] args)
 				System.out.print("Quotation: ");
 				buffer = in.nextLine();
 				if(!valid(buffer)){
-					System.out.println("Invalid quotation");
+					System.out.println("Invalid quotation, do not include XML escape sequences");
 					break;
 				}
 				quoteTmp = new Quote();
@@ -115,13 +115,27 @@ public static void main(String[] args)
 				System.out.print("Author: ");
 				buffer = in.nextLine();
 				if(!valid(buffer)){
-					System.out.println("Invalid author");
+					System.out.println("Invalid author, do not include XML escape sequences");
 					quoteTmp = null;
 					break;
 				}
 				quoteTmp.setAuthor(buffer);
-				quoteList.setQuote(quoteTmp);
-				modified = true;
+				printQuote(quoteTmp);
+				selection = 0;
+				while(!(selection == 1 || selection == 2)){
+					System.out.print("add quote to list?\n1: yes\n2: no\n> ");
+					buffer = in.nextLine();
+					try{
+						selection = Integer.parseInt(buffer);
+					}catch(NumberFormatException e){
+						System.out.println("Invalid entry, press 1 or 2");
+						selection = 0;
+					}
+				}
+				if(selection == 1){
+					quoteList.setQuote(quoteTmp);
+					modified = true;
+				}
 				break;
 			case 5:
 				System.out.println("Exiting");
@@ -184,9 +198,21 @@ private static void searchQuote(String query, int scope)
 	}
 }
 
-// validate quotation
+// validate quotation. Searches the string for xml escape sequences
+// and returns false if it finds any. If no escape sequences are
+// found, returns true
 private static boolean valid(String quotation)
 {
+	if(quotation.indexOf("&amp;") != -1)
+		return false;
+	if(quotation.indexOf("&lt;") != -1)
+		return false;
+	if(quotation.indexOf("&gt;") != -1)
+		return false;
+	if(quotation.indexOf("&quot;") != -1)
+		return false;
+	if(quotation.indexOf("&apos;") != -1)
+		return false;
 	return true;
 }
 
