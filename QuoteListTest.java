@@ -3,7 +3,7 @@ import static org.junit.Assert.*;
 
 public class QuoteListTest
 {
-   // These constants are used in the servlet
+   // Search constants
    /* package */ static final int SearchAuthorVal = 0;
    /* package */ static final int SearchTextVal   = 1;
    /* package */ static final int SearchBothVal   = 2;
@@ -20,7 +20,7 @@ public class QuoteListTest
 
     @After public void deinitialize()
     {
-        // garbage collect list
+        // garbage collect objects
         testList = null;
         tmpQuote = null;
     }
@@ -45,7 +45,6 @@ public class QuoteListTest
         tmpQuote.setQuoteText("That's one small step for man, one giant leap for mankind");
         testList.setQuote(tmpQuote);
         returnList = testList.search("", SearchAuthorVal);
-        //System.out.println("ret: " + returnList.getQuote(0).getAuthor());
         assertTrue("Author search with empty string", returnList.getSize() == 2);
         returnList = testList.search("", SearchTextVal);
         assertTrue("Quote text search with empty string", returnList.getSize() == 2);
