@@ -12,7 +12,7 @@ import quotes.*;
  *         Jeff Offutt & Mongkoldech Rajapakdee
  *         Date: Nov, 2009
  *
- * Run with: java -cp ../ quotes.QuoteCLI
+ * Run with: java QuoteCLI
  *
  * Wiring the pieces together:
  *    QuoteCLI.java -- The CLI frontend (entry point)
@@ -29,10 +29,6 @@ import quotes.*;
 public class QuoteCLI 
 {
 
-   /* package */ static final int SearchAuthorVal = 0;
-   /* package */ static final int SearchTextVal   = 1;
-   /* package */ static final int SearchBothVal   = 2;
-
    // Data file
    private static final String quoteFileName = "quotes.xml";
    // Search history size
@@ -47,7 +43,7 @@ public static void main(String[] args)
    quoteList = qParser.getQuoteList();
    ArrayList<String> searchList = new ArrayList<String>();
    Scanner in = new Scanner(System.in);
-   int searchScopeInt = SearchBothVal; // Default
+   int searchScopeInt = SearchValues.SearchBothVal; // Default
    String searchText = "";
    String buffer = "";
    // Initial output
@@ -86,13 +82,13 @@ public static void main(String[] args)
             switch(selection){
                // 1: quote body 2: author 3: both
                case 1:
-                  searchScopeInt = SearchTextVal;
+                  searchScopeInt = SearchValues.SearchTextVal;
                   break;
                case 2:
-                  searchScopeInt = SearchAuthorVal;
+                  searchScopeInt = SearchValues.SearchAuthorVal;
                   break;
                default:
-                  searchScopeInt = SearchBothVal;
+                  searchScopeInt = SearchValues.SearchBothVal;
             }
             System.out.print("Enter search query: ");
             searchText = in.nextLine();

@@ -4,7 +4,7 @@ import junit.framework.JUnit4TestAdapter;
 
 @RunWith(Suite.class)
 
-@Suite.SuiteClasses({QuoteListTest.class})
+@Suite.SuiteClasses({QuoteListTest.class, KeywordTest.class})
 
 public class AllTests
 {

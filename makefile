@@ -1,12 +1,12 @@
 QuoteCLI.class: QuoteCLI.java
 	javac QuoteCLI.java
 
-quotes: quotes/Quote.java quotes/QuoteList.java quotes/QuoteSaxHandler.java quotes/QuoteSaxParser.java quotes/QuoteXMLWriter.java
-	javac quotes/Quote.java quotes/QuoteList.java quotes/QuoteSaxHandler.java quotes/QuoteSaxParser.java quotes/QuoteXMLWriter.java
+quotes: quotes/Quote.java quotes/QuoteList.java quotes/QuoteSaxHandler.java quotes/QuoteSaxParser.java quotes/QuoteXMLWriter.java quotes/SearchValues.java
+	javac -Xlint:unchecked quotes/Quote.java quotes/QuoteList.java quotes/QuoteSaxHandler.java quotes/QuoteSaxParser.java quotes/QuoteXMLWriter.java quotes/SearchValues.java
 
 test: tests
 tests:
-	javac -cp .:junit.jar AllTests.java QuoteListTest.java
+	javac -cp .:junit.jar AllTests.java QuoteListTest.java KeywordTest.java
 
 run:
 	java QuoteCLI

@@ -12,11 +12,6 @@ public class QuoteList
 {
    private ArrayList<Quote> quoteArray;
 
-   // These constants are used in the servlet
-   /* package */ static final int SearchAuthorVal = 0;
-   /* package */ static final int SearchTextVal   = 1;
-   /* package */ static final int SearchBothVal   = 2;
-
    // For returning a random quote
    private Random randomGen;
    private final int seed = 19580427;
@@ -59,20 +54,23 @@ public class QuoteList
       for (int i = 0; i < quoteArray.size(); i++)
       {
          quote = quoteArray.get (i);
-         if (mode == SearchAuthorVal && quote.getAuthor().toLowerCase().indexOf (searchString.toLowerCase()) != -1)
+         if (mode == SearchValues.SearchAuthorVal && quote.getAuthor().toLowerCase().indexOf (searchString.toLowerCase()) != -1)
          {  // Found a matching author, save it
             // System.out.println ("Matched Author ");
             returnQuote.setQuote (quote);
-         } else if (mode == SearchTextVal && quote.getQuoteText().toLowerCase().indexOf (searchString.toLowerCase()) != -1)
+         } else if (mode == SearchValues.SearchTextVal && quote.getQuoteText().toLowerCase().indexOf (searchString.toLowerCase()) != -1)
          {  // Found a matching quote, save it
             // System.out.println ("Matched Text ");
             returnQuote.setQuote (quote);
-         } else if ((mode == SearchBothVal) &&
+         } else if ((mode == SearchValues.SearchBothVal) &&
                     (quote.getAuthor().toLowerCase().indexOf (searchString.toLowerCase()) != -1 ||
                      quote.getQuoteText().toLowerCase().indexOf (searchString.toLowerCase()) != -1))
          {  // Found a matching author or quote, save it
             // System.out.println ("Matched Both ");
             returnQuote.setQuote (quote);
+         } else if ((mode == SearchValues.SearchKeywordVal) && quote.hasKeyword(searchString))
+         {
+             returnQuote.setQuote (quote);
          }
       }
       return returnQuote;

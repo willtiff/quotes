@@ -1,5 +1,7 @@
 package quotes;
 
+import java.util.HashSet;
+
 /**
  * Quote data object.
  * @author Mongkoldech Rajapakdee & Jeff offutt
@@ -11,10 +13,14 @@ public class Quote
 {
    private String author;
    private String quoteText;
+   private HashSet<String> keywords;
 
    // Default constructor does nothing
    public Quote ()
    {
+      author="";
+      quoteText = "";
+      keywords = new HashSet<String>();
    }
 
    // Constructor that assigns both strings
@@ -22,6 +28,7 @@ public class Quote
    {
       this.author = author;
       this.quoteText = quoteText;
+      this.keywords = new HashSet<String>();
    }
 
    // Getter and setter for author
@@ -42,6 +49,15 @@ public class Quote
    public void setQuoteText (String quoteText)
    {
       this.quoteText = quoteText;
+   }
+
+   public void addKeyword (String newKeyword)
+   {
+      keywords.add(newKeyword);
+   }
+   public boolean hasKeyword (String keyword)
+   {
+      return keywords.contains(keyword);
    }
 
    @Override
