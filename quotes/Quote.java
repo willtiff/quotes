@@ -1,6 +1,7 @@
 package quotes;
 
 import java.util.HashSet;
+import java.util.Iterator;
 
 /**
  * Quote data object.
@@ -59,10 +60,22 @@ public class Quote
    {
       return keywords.contains(keyword);
    }
+   public String[] getKeywords ()
+   {
+      return keywords.toArray(new String[keywords.size()]);
+   }
 
    @Override
    public String toString ()
    {
-      return "Quote {" + "author='" + author + '\'' + ", quoteText='" + quoteText + '\'' + '}';
+      String quote = "Quote {" + "author='" + author + '\'' + ", quoteText='" + quoteText + '\'';
+      if(keywords.size() > 0)
+      {
+         quote = quote + ", keywords:";
+         for(String keyword : keywords)
+            quote = quote + " \'" + keyword + '\'';
+         quote = quote + '}';
+      }
+      return quote;
    }
 }

@@ -54,23 +54,29 @@ public class QuoteList
       for (int i = 0; i < quoteArray.size(); i++)
       {
          quote = quoteArray.get (i);
-         if (mode == SearchValues.SearchAuthorVal && quote.getAuthor().toLowerCase().indexOf (searchString.toLowerCase()) != -1)
+         if (mode == Constants.SearchAuthorVal && quote.getAuthor().toLowerCase().indexOf (searchString.toLowerCase()) != -1)
          {  // Found a matching author, save it
             // System.out.println ("Matched Author ");
             returnQuote.setQuote (quote);
-         } else if (mode == SearchValues.SearchTextVal && quote.getQuoteText().toLowerCase().indexOf (searchString.toLowerCase()) != -1)
+         } else if (mode == Constants.SearchTextVal && quote.getQuoteText().toLowerCase().indexOf (searchString.toLowerCase()) != -1)
          {  // Found a matching quote, save it
             // System.out.println ("Matched Text ");
             returnQuote.setQuote (quote);
-         } else if ((mode == SearchValues.SearchBothVal) &&
+         } else if ((mode == Constants.SearchBothVal) &&
                     (quote.getAuthor().toLowerCase().indexOf (searchString.toLowerCase()) != -1 ||
                      quote.getQuoteText().toLowerCase().indexOf (searchString.toLowerCase()) != -1))
          {  // Found a matching author or quote, save it
             // System.out.println ("Matched Both ");
             returnQuote.setQuote (quote);
-         } else if ((mode == SearchValues.SearchKeywordVal) && quote.hasKeyword(searchString))
+         } else if ((mode == Constants.SearchKeywordVal) && quote.hasKeyword(searchString))
          {
-             returnQuote.setQuote (quote);
+            returnQuote.setQuote (quote);
+         } else if ((mode == Constants.SearchAllVal) &&
+                    (quote.getAuthor().toLowerCase().indexOf (searchString.toLowerCase()) != -1 ||
+                     quote.getQuoteText().toLowerCase().indexOf (searchString.toLowerCase()) != -1) ||
+                     quote.hasKeyword(searchString))
+         {
+            returnQuote.setQuote (quote);
          }
       }
       return returnQuote;

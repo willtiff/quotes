@@ -43,7 +43,7 @@ public static void main(String[] args)
    quoteList = qParser.getQuoteList();
    ArrayList<String> searchList = new ArrayList<String>();
    Scanner in = new Scanner(System.in);
-   int searchScopeInt = SearchValues.SearchBothVal; // Default
+   int searchScopeInt = Constants.SearchBothVal; // Default
    String searchText = "";
    String buffer = "";
    // Initial output
@@ -82,13 +82,13 @@ public static void main(String[] args)
             switch(selection){
                // 1: quote body 2: author 3: both
                case 1:
-                  searchScopeInt = SearchValues.SearchTextVal;
+                  searchScopeInt = Constants.SearchTextVal;
                   break;
                case 2:
-                  searchScopeInt = SearchValues.SearchAuthorVal;
+                  searchScopeInt = Constants.SearchAuthorVal;
                   break;
                default:
-                  searchScopeInt = SearchValues.SearchBothVal;
+                  searchScopeInt = Constants.SearchBothVal;
             }
             System.out.print("Enter search query: ");
             searchText = in.nextLine();

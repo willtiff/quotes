@@ -16,12 +16,6 @@ public class QuoteSaxHandler extends DefaultHandler
    private Quote quoteTmp = null; // temporary Quote
    private String currentElement = null; // current element name
 
-   // Node names in XML file
-   private final String QuoteListElem   = "quote-list";
-   private final String QuoteElem       = "quote";
-   private final String QuoteAuthorElem = "author";
-   private final String QuoteTextElem   = "quote-text";
-
 public QuoteSaxHandler()
 {
    super();
@@ -47,29 +41,33 @@ public void endDocument ()
 @Override
 public void startElement (String uri, String name, String qName, Attributes atts)
 {
-   if (qName.equalsIgnoreCase (QuoteListElem))
+   if (qName.equalsIgnoreCase (Constants.QuoteListElem))
    {
-      currentElement = QuoteListElem;
+      currentElement = Constants.QuoteListElem;
    }
-   else if (qName.equalsIgnoreCase(QuoteElem))
+   else if (qName.equalsIgnoreCase(Constants.QuoteElem))
    {
-      currentElement = QuoteElem;
+      currentElement = Constants.QuoteElem;
       quoteTmp = new Quote();
    }
-   else if (qName.equalsIgnoreCase (QuoteAuthorElem))
+   else if (qName.equalsIgnoreCase (Constants.QuoteAuthorElem))
    {
-      currentElement = QuoteAuthorElem;
+      currentElement = Constants.QuoteAuthorElem;
    }
-   else if (qName.equalsIgnoreCase (QuoteTextElem))
+   else if (qName.equalsIgnoreCase (Constants.QuoteTextElem))
    {
-      currentElement = QuoteTextElem;
+      currentElement = Constants.QuoteTextElem;
+   }
+   else if (qName.equalsIgnoreCase (Constants.QuoteKeywordElem))
+   {
+      currentElement = Constants.QuoteKeywordElem;
    }
 }
 
 @Override
 public void endElement (String uri, String name, String qName)
 {
-   if (qName.equalsIgnoreCase (QuoteElem))
+   if (qName.equalsIgnoreCase (Constants.QuoteElem))
    {
       quoteList.setQuote (quoteTmp);
       quoteTmp = null;
@@ -82,7 +80,7 @@ public void characters (char ch[], int start, int length)
    String value = new String (ch, start, length);
    if (!value.trim().equals(""))
    {
-      if (currentElement.equalsIgnoreCase (QuoteTextElem))
+      if (currentElement.equalsIgnoreCase (Constants.QuoteTextElem))
       {
          String temp = quoteTmp.getQuoteText();
          if(temp == null){
@@ -91,7 +89,7 @@ public void characters (char ch[], int start, int length)
             quoteTmp.setQuoteText(temp + value);
          }
       }
-      else if (currentElement.equalsIgnoreCase (QuoteAuthorElem))
+      else if (currentElement.equalsIgnoreCase (Constants.QuoteAuthorElem))
       {
          String temp = quoteTmp.getAuthor();
          if(temp == null){
@@ -99,6 +97,10 @@ public void characters (char ch[], int start, int length)
          }else{
             quoteTmp.setAuthor(temp + value);
          }
+      }
+      else if (currentElement.equalsIgnoreCase (Constants.QuoteKeywordElem))
+      {
+         quoteTmp.addKeyword(value);
       }
    }
 }

@@ -17,14 +17,6 @@ public class QuoteXMLWriter
 	File outfile;
 	FileOutputStream outstream;
 
-   // Node names in XML file
-   private final String QuoteListElem   = "quote-list";
-   private final String QuoteElem       = "quote";
-   private final String QuoteAuthorElem = "author";
-   private final String QuoteTextElem   = "quote-text";
-	// Indentation in XML file
-	private final String QuoteOuterIndent = "   ";
-	private final String QuoteInnerIndent = "      ";
 
 	public QuoteXMLWriter(String filename){
 		outfile = new File(filename);
@@ -45,25 +37,33 @@ public class QuoteXMLWriter
 		Quote quoteTmp;
 		writer.writeStartDocument();
 		writer.writeCharacters("\n");
-		writer.writeStartElement(QuoteListElem);
+		writer.writeStartElement(Constants.QuoteListElem);
 		writer.writeCharacters("\n");
 		int listSize = quotes.getSize();
 		for(int i = 0; i < listSize; i++){
 			quoteTmp = quotes.getQuote(i);
-			writer.writeCharacters(QuoteOuterIndent);
-			writer.writeStartElement(QuoteElem);
+			writer.writeCharacters(Constants.QuoteOuterIndent);
+			writer.writeStartElement(Constants.QuoteElem);
 			writer.writeCharacters("\n");
-			writer.writeCharacters(QuoteInnerIndent);
-			writer.writeStartElement(QuoteTextElem);
+			writer.writeCharacters(Constants.QuoteInnerIndent);
+			writer.writeStartElement(Constants.QuoteTextElem);
 			writer.writeCharacters(quoteTmp.getQuoteText());
 			writer.writeEndElement();
 			writer.writeCharacters("\n");
-			writer.writeCharacters(QuoteInnerIndent);
-			writer.writeStartElement(QuoteAuthorElem);
+			writer.writeCharacters(Constants.QuoteInnerIndent);
+			writer.writeStartElement(Constants.QuoteAuthorElem);
 			writer.writeCharacters(quoteTmp.getAuthor());
 			writer.writeEndElement();
 			writer.writeCharacters("\n");
-			writer.writeCharacters(QuoteOuterIndent);
+            for(String keyword : quoteTmp.getKeywords())
+            {
+                writer.writeCharacters(Constants.QuoteInnerIndent);
+                writer.writeStartElement(Constants.QuoteKeywordElem);
+                writer.writeCharacters(keyword);
+                writer.writeEndElement();
+                writer.writeCharacters("\n");
+            }
+			writer.writeCharacters(Constants.QuoteOuterIndent);
 			writer.writeEndElement();
 			writer.writeCharacters("\n");
 		}
