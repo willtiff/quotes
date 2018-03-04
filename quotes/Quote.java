@@ -54,11 +54,11 @@ public class Quote
 
    public void addKeyword (String newKeyword)
    {
-      keywords.add(newKeyword);
+      keywords.add(newKeyword.toLowerCase());
    }
    public boolean hasKeyword (String keyword)
    {
-      return keywords.contains(keyword);
+      return keywords.contains(keyword.toLowerCase());
    }
    public String[] getKeywords ()
    {

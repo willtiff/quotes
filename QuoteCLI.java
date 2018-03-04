@@ -35,16 +35,17 @@ public class QuoteCLI
    private static final int SEARCH_HISTORY_SIZE = 5;
    // Stores all the quotes from the xml file
    private static QuoteList quoteList;
+   private static Scanner in;
+   private static ArrayList<String> searchList;
 
 // Main entry point
 public static void main(String[] args)
 {
    QuoteSaxParser qParser = new QuoteSaxParser (quoteFileName);
    quoteList = qParser.getQuoteList();
-   ArrayList<String> searchList = new ArrayList<String>();
-   Scanner in = new Scanner(System.in);
+   searchList = new ArrayList<String>();
+   in = new Scanner(System.in);
    int searchScopeInt = Constants.SearchBothVal; // Default
-   String searchText = "";
    String buffer = "";
    // Initial output
    System.out.println("The GMU Quote Generator");
@@ -70,79 +71,21 @@ public static void main(String[] args)
             printQuote(quoteTmp);
             break;
          case 2:
-            System.out.print("Select scope of search:\n1: quote\n"
-                  + "2: author\n3: both\n> ");
-            buffer = in.nextLine();
-            try{
-               selection = Integer.parseInt(buffer);
-            }catch(NumberFormatException e){
-               System.out.println("Invalid entry, using both");
-               selection = 0;
-            }
-            switch(selection){
-               // 1: quote body 2: author 3: both
-               case 1:
-                  searchScopeInt = Constants.SearchTextVal;
-                  break;
-               case 2:
-                  searchScopeInt = Constants.SearchAuthorVal;
-                  break;
-               default:
-                  searchScopeInt = Constants.SearchBothVal;
-            }
-            System.out.print("Enter search query: ");
-            searchText = in.nextLine();
-            searchList.add(searchText);
-            // limit search history size
-            if(searchList.size() > SEARCH_HISTORY_SIZE)
-               searchList.remove(0);
-            System.out.println("");
-            searchQuote(searchText, searchScopeInt);
+            search();
             break;
          case 3:
             printSearchHistory(searchList);
             break;
          case 4:
             // add new quote
-            System.out.print("Quotation: ");
-            buffer = in.nextLine();
-            if(!valid(buffer)){
-               System.out.println("Invalid quotation, do not include XML escape sequences");
-               break;
-            }
-            quoteTmp = new Quote();
-            quoteTmp.setQuoteText(buffer);
-            System.out.print("Author: ");
-            buffer = in.nextLine();
-            if(!valid(buffer)){
-               System.out.println("Invalid author, do not include XML escape sequences");
-               quoteTmp = null;
-               break;
-            }
-            quoteTmp.setAuthor(buffer);
-            printQuote(quoteTmp);
-            selection = 0;
-            while(!(selection == 1 || selection == 2)){
-               System.out.print("add quote to list?\n1: yes\n2: no\n> ");
-               buffer = in.nextLine();
-               try{
-                  selection = Integer.parseInt(buffer);
-               }catch(NumberFormatException e){
-                  System.out.println("Invalid entry, press 1 or 2");
-                  selection = 0;
-               }
-            }
-            if(selection == 1){
-               quoteList.setQuote(quoteTmp);
-               modified = true;
-            }
+            modified = addQuote();
             break;
          case 5:
             System.out.println("Exiting");
             flag = false;
             break;
          default:
-            System.out.println("Please enter a number from 1-4");
+            System.out.println("Please enter a number from 1-5");
       }
    }
    if(modified)
@@ -153,6 +96,23 @@ public static void main(String[] args)
 private static void printQuote(Quote quote)
 {
    System.out.println('"' + quote.getQuoteText() + '"' + "\n  --" + quote.getAuthor());
+   String[] keywords = quote.getKeywords();
+   if(keywords.length > 0)
+   {
+      System.out.print("Keywords:");
+      boolean first = true;
+      for(String keyword : keywords)
+      {
+         if(first)
+         {
+            System.out.print(" " + keyword);
+            first = false;
+         }
+         else
+            System.out.print(", " + keyword);
+      }
+      System.out.print("\n");
+   }
 }
 
 // Prints a simple menu for the user to select from
@@ -161,6 +121,98 @@ private static void printMenu()
    System.out.print("1: Get another random quote\n2: Search\n"
          +"3: See search history\n4: Add new quote\n"
          +"5: Quit\n> ");
+}
+
+private static void search()
+{
+   System.out.print("Select scope of search:\n1: quote\n"
+         + "2: author\n3: both text and author\n"
+         + "4: keyword\n5: all categories\n> ");
+   String buffer = in.nextLine();
+   int selection = 0, searchScopeInt = 0;
+   try{
+      selection = Integer.parseInt(buffer);
+   }catch(NumberFormatException e){
+      System.out.println("Invalid entry, using both");
+      selection = 0;
+   }
+   switch(selection){
+      // 1: quote body 2: author 3: both 4: keyword 5: all
+      case 1:
+         searchScopeInt = Constants.SearchTextVal;
+         break;
+      case 2:
+         searchScopeInt = Constants.SearchAuthorVal;
+         break;
+      case 3:
+         searchScopeInt = Constants.SearchBothVal;
+         break;
+      case 4:
+         searchScopeInt = Constants.SearchKeywordVal;
+         break;
+      case 5:
+      default:
+         searchScopeInt = Constants.SearchAllVal;
+   }
+   System.out.print("Enter search query: ");
+   String searchText = in.nextLine();
+   searchList.add(searchText);
+   // limit search history size
+   if(searchList.size() > SEARCH_HISTORY_SIZE)
+      searchList.remove(0);
+   System.out.print("\n");
+   searchQuote(searchText, searchScopeInt);
+}
+private static boolean addQuote()
+{
+   System.out.print("Quotation: ");
+   String buffer = in.nextLine();
+   if(!valid(buffer)){
+      System.out.println("Invalid quotation, do not include XML escape sequences");
+      return false;
+   }
+   Quote quoteTmp = new Quote();
+   quoteTmp.setQuoteText(buffer);
+   System.out.print("Author: ");
+   buffer = in.nextLine();
+   if(!valid(buffer)){
+      System.out.println("Invalid author, do not include XML escape sequences");
+      quoteTmp = null;
+      return false;
+   }
+   quoteTmp.setAuthor(buffer);
+   // prompt to add keywords
+   System.out.print("Keyword for quote (blank to exit): ");
+   buffer = in.nextLine();
+   while(!buffer.isEmpty())
+   {
+      if(!valid(buffer)){
+         System.out.println("Invalid keyword, do not include XML escape sequences");
+         quoteTmp = null;
+         return false;
+      }
+      quoteTmp.addKeyword(buffer);
+      System.out.print("Keyword for quote (blank to exit): ");
+      buffer = in.nextLine();
+   }
+   printQuote(quoteTmp);
+   int selection = 0;
+   while(!(selection == 1 || selection == 2)){
+      System.out.print("add quote to list?\n1: yes\n2: no\n> ");
+      buffer = in.nextLine();
+      try{
+         selection = Integer.parseInt(buffer);
+      }catch(NumberFormatException e){
+         System.out.println("Invalid entry, press 1 or 2");
+         selection = 0;
+      }
+   }
+   System.out.println(selection);
+   if(selection == 1){
+      quoteList.setQuote(quoteTmp);
+      return true;
+   }
+   return false;
 }
 
 // Print all searches in searchList (should be <= 5 total)
